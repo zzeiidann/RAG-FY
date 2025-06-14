@@ -13,7 +13,7 @@
 [![CLIP](https://img.shields.io/badge/CLIP-OpenAI-orange.svg)](https://openai.com/research/clip)
 [![FAISS](https://img.shields.io/badge/FAISS-Vector%20DB-purple.svg)](https://faiss.ai)
 
-[🚀 Quick Start](#-quick-start) • [📚 Features](#-features) • [🛠️ Installation](#️-installation) • [💡 Usage](#-usage) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [📚 Features](#-features) • [🛠️ Installation](#️-installation) • [💡 Usage](#-usage) 
 
 </div>
 
