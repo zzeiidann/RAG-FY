@@ -64,16 +64,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Main title
 st.markdown('<h1 class="main-header">Image + Knowledge RAG Search</h1>', unsafe_allow_html=True)
 
-# Sidebar for configuration
 with st.sidebar:
     st.header("⚙️ Search Configuration")
     top_k = st.slider("Number of results", min_value=1, max_value=20, value=5)
     
     st.header("📊 System Info")
-    # Check if database exists
     db_path = Path("faiss_db")
     if db_path.exists():
         st.success("✅ Database found")
@@ -86,27 +83,25 @@ with st.sidebar:
     else:
         st.error("Database not found. Run Data.py first!")
 
-# Main content
+
 col1, col2 = st.columns([1, 1])
 
 with col1:
     st.header("🔤 Text Search")
     query = st.text_input("Enter your search query:", placeholder="e.g., 'red car in the street'")
     
-    if st.button("🔍 Search with Text", use_container_width=True):
+    if st.button("Search with Text", use_container_width=True):
         if not query.strip():
             st.warning("Please enter a search query")
         else:
             try:
                 with st.spinner("Searching..."):
-                    # Clear memory before search
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
                     gc.collect()
                     
                     results = search_text(query, top_k)
                     
-                    # Display results
                     st.markdown("### 📋 Search Results")
                     if results:
                         for r in results:
@@ -139,30 +134,26 @@ with col2:
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_column_width=True)
         
-        if st.button("🔍 Search with Image", use_container_width=True):
+        if st.button("Search with Image", use_container_width=True):
             try:
                 with st.spinner("Processing image and searching..."):
-                    # Create temporary file
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp_file:
                         if image.mode != 'RGB':
                             image = image.convert('RGB')
                         image.save(tmp_file.name, 'JPEG')
                         temp_path = tmp_file.name
                     
-                    # Clear memory before search
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
                     gc.collect()
                     
                     results = search_image(temp_path, top_k)
-                    
-                    # Clean up temporary file
+            
                     try:
                         os.unlink(temp_path)
                     except:
                         pass
-                    
-                    # Display results
+           
                     st.markdown("### Search Results")
                     if results:
                         for r in results:
@@ -170,7 +161,7 @@ with col2:
                             st.markdown(f"""
                             <div class="result-card">
                                 <div class="result-rank">#{r['rank']}</div>
-                                <div class="result-filename">📁 {meta['filename']}</div>
+                                <div class="result-filename"> {meta['filename']}</div>
                                 <div class="distance-score">Distance: {r['distance']:.4f}</div>
                                 <div class="result-description">{meta['description']}</div>
                                 <small>Type: {meta['type']}</small>
@@ -183,14 +174,13 @@ with col2:
                 st.error(f"Error during image search: {str(e)}")
                 logger.error(f"Image search error: {e}")
             finally:
-                # Clean up temporary file if it still exists
                 try:
                     if 'temp_path' in locals():
                         os.unlink(temp_path)
                 except:
                     pass
 
-# Footer
+
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.9rem;">
@@ -198,7 +188,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Add refresh button
 if st.button("🔄 Clear Cache & Refresh"):
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
