@@ -1,5 +1,3 @@
-# main.py
-
 import streamlit as st
 import tempfile
 import os
@@ -9,18 +7,15 @@ from pathlib import Path
 from PIL import Image
 import logging
 
-# Import the fixed query functions
 try:
     from query import search_text, search_image
 except ImportError as e:
     st.error(f"Error importing query functions: {e}")
     st.stop()
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Page configuration
 st.set_page_config(
     page_title="Image+Text RAG Search", 
     layout="wide",

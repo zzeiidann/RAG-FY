@@ -1,5 +1,3 @@
-# data.py
-
 import argparse
 import os
 import json

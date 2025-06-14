@@ -1,5 +1,3 @@
-# query.py
-
 import argparse
 import pickle
 import faiss
@@ -11,7 +9,6 @@ from embedding_function import ImageEmbedder, TextEmbedder
 from PIL import Image
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -19,7 +16,6 @@ DB_PATH = "faiss_db"
 INDEX_FILE = Path(DB_PATH) / "vector_index.faiss"
 META_FILE = Path(DB_PATH) / "metadata.pkl"
 
-# Global embedders to avoid reloading models
 _text_embedder = None
 _image_embedder = None
 
@@ -104,7 +100,6 @@ def search_text(query_text, top_k=5):
     """Search using text query"""
     logger.info(f"Searching for text: '{query_text}'")
     
-    # Clear memory before processing
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     gc.collect()
@@ -113,7 +108,6 @@ def search_text(query_text, top_k=5):
         vec = embed_text(query_text)
         results = search_faiss(vec, top_k)
         
-        # Clear memory after processing
         del vec
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -128,8 +122,7 @@ def search_text(query_text, top_k=5):
 def search_image(image_path, top_k=5):
     """Search using image query"""
     logger.info(f"Searching for image: '{image_path}'")
-    
-    # Clear memory before processing
+
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     gc.collect()
@@ -137,8 +130,7 @@ def search_image(image_path, top_k=5):
     try:
         vec = embed_image(image_path)
         results = search_faiss(vec, top_k)
-        
-        # Clear memory after processing
+
         del vec
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -172,7 +164,6 @@ def main():
             parser.print_help()
             return
 
-        # Display results
         print(f"\n🔍 Found {len(results)} results:")
         print("=" * 60)
         
